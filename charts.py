@@ -2,7 +2,7 @@ import json
 import matplotlib.pyplot as plt
 
 # Carregar os dados do arquivo JSON
-with open('allocation_result_hungarian.json', 'r') as file:
+with open('allocation_result.json', 'r') as file:
     json_data = json.load(file)
 
 # Ordenar as distâncias

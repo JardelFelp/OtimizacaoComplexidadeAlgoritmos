@@ -1,0 +1,381 @@
+[
+    {
+        "id": 0,
+        "district_id": 1,
+        "name": "ESC EST ENS FUN MARQUES D ALEGRETE",
+        "rooms": [
+            {
+                "type_of_test": "Portuguese",
+                "capacity": 15,
+                "id": 0
+            },
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 30,
+                "id": 1
+            },
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 15,
+                "id": 2
+            }
+        ]
+    },
+    {
+        "id": 1,
+        "district_id": 33,
+        "name": "ESC EST ENS FUN SALGADO FILHO",
+        "rooms": [
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 30,
+                "id": 0
+            },
+            {
+                "type_of_test": "Portuguese",
+                "capacity": 30,
+                "id": 1
+            },
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 30,
+                "id": 2
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "district_id": 11,
+        "name": "ESC EST ENS FUN FARROUPILHA",
+        "rooms": [
+            {
+                "type_of_test": "Portuguese",
+                "capacity": 25,
+                "id": 0
+            },
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 25,
+                "id": 1
+            },
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 15,
+                "id": 2
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "district_id": 1,
+        "name": "ESC EST ENS FUN FREITAS VALLE",
+        "rooms": [
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 15,
+                "id": 0
+            },
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 20,
+                "id": 1
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "district_id": 13,
+        "name": "ESC EST ENS FUN GASPAR MARTINS",
+        "rooms": [
+            {
+                "type_of_test": "Portuguese",
+                "capacity": 25,
+                "id": 0
+            },
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 15,
+                "id": 1
+            }
+        ]
+    },
+    {
+        "id": 5,
+        "district_id": 10,
+        "name": "ESC EST ENS MED DR ROMARIO ARAUJO DE OLIVEIRA",
+        "rooms": [
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 15,
+                "id": 0
+            },
+            {
+                "type_of_test": "Portuguese",
+                "capacity": 30,
+                "id": 1
+            }
+        ]
+    },
+    {
+        "id": 6,
+        "district_id": 63,
+        "name": "ESC EST ENS FUN ECILDA ALVES PAIM",
+        "rooms": [
+            {
+                "type_of_test": "Portuguese",
+                "capacity": 30,
+                "id": 0
+            },
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 20,
+                "id": 1
+            },
+            {
+                "type_of_test": "Portuguese",
+                "capacity": 25,
+                "id": 2
+            },
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 30,
+                "id": 3
+            }
+        ]
+    },
+    {
+        "id": 7,
+        "district_id": 27,
+        "name": "ESC EST ENS MED NAS DEPENDENC ENS FUND WALDEMAR BORGES",
+        "rooms": [
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 25,
+                "id": 0
+            },
+            {
+                "type_of_test": "Portuguese",
+                "capacity": 30,
+                "id": 1
+            },
+            {
+                "type_of_test": "Portuguese",
+                "capacity": 15,
+                "id": 2
+            }
+        ]
+    },
+    {
+        "id": 8,
+        "district_id": 50,
+        "name": "ESC EST ENS MED JOSE BONIFACIO",
+        "rooms": [
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 30,
+                "id": 0
+            },
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 30,
+                "id": 1
+            },
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 25,
+                "id": 2
+            },
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 30,
+                "id": 3
+            }
+        ]
+    },
+    {
+        "id": 9,
+        "district_id": 13,
+        "name": "ESC EST ED BAS DR LAURO DORNELLES",
+        "rooms": [
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 15,
+                "id": 0
+            },
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 25,
+                "id": 1
+            }
+        ]
+    },
+    {
+        "id": 10,
+        "district_id": 33,
+        "name": "ESC EST ENS MED TANCREDO DE ALMEIDA NEVES",
+        "rooms": [
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 20,
+                "id": 0
+            },
+            {
+                "type_of_test": "Portuguese",
+                "capacity": 15,
+                "id": 1
+            },
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 20,
+                "id": 2
+            },
+            {
+                "type_of_test": "Portuguese",
+                "capacity": 25,
+                "id": 3
+            }
+        ]
+    },
+    {
+        "id": 11,
+        "district_id": 7,
+        "name": "ESC EST ENS FUN SANTA INES",
+        "rooms": [
+            {
+                "type_of_test": "Portuguese",
+                "capacity": 20,
+                "id": 0
+            },
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 25,
+                "id": 1
+            },
+            {
+                "type_of_test": "Portuguese",
+                "capacity": 15,
+                "id": 2
+            },
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 15,
+                "id": 3
+            }
+        ]
+    },
+    {
+        "id": 12,
+        "district_id": 1,
+        "name": "INST EST EDUC OSWALDO ARANHA",
+        "rooms": [
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 25,
+                "id": 0
+            },
+            {
+                "type_of_test": "Portuguese",
+                "capacity": 30,
+                "id": 1
+            },
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 20,
+                "id": 2
+            },
+            {
+                "type_of_test": "Portuguese",
+                "capacity": 25,
+                "id": 3
+            }
+        ]
+    },
+    {
+        "id": 13,
+        "district_id": 7,
+        "name": "ESC EST ENS FUN OSVALDO DORNELLES",
+        "rooms": [
+            {
+                "type_of_test": "Portuguese",
+                "capacity": 20,
+                "id": 0
+            },
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 30,
+                "id": 1
+            },
+            {
+                "type_of_test": "Portuguese",
+                "capacity": 15,
+                "id": 2
+            }
+        ]
+    },
+    {
+        "id": 14,
+        "district_id": 11,
+        "name": "COL ESTADUAL EMILIO ZUNEDA",
+        "rooms": [
+            {
+                "type_of_test": "Portuguese",
+                "capacity": 20,
+                "id": 0
+            },
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 15,
+                "id": 1
+            }
+        ]
+    },
+    {
+        "id": 15,
+        "district_id": 1,
+        "name": "ESC EST ENS MED DEMETRIO RIBEIRO",
+        "rooms": [
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 20,
+                "id": 0
+            },
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 25,
+                "id": 1
+            },
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 25,
+                "id": 2
+            },
+            {
+                "type_of_test": "Mathematics",
+                "capacity": 15,
+                "id": 3
+            }
+        ]
+    },
+    {
+        "id": 16,
+        "district_id": 33,
+        "name": "ESC EST ENS FUN EDUARDO VARGAS",
+        "rooms": [
+            {
+                "type_of_test": "Portuguese",
+                "capacity": 20,
+                "id": 0
+            },
+            {
+                "type_of_test": "Portuguese",
+                "capacity": 30,
+                "id": 1
+            },
+            {
+                "type_of_test": "Portuguese",
+                "capacity": 20,
+                "id": 2
+            }
+        ]
+    }
+]

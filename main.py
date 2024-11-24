@@ -1,131 +1,117 @@
-import json
 import pandas as pd
+import numpy as np
+import json
 
+# Função para calcular a matriz de custo
+def prepare_cost_matrix(participants, schools, distances):
+    # Lista para mapear informações das salas disponíveis
+    school_room_map = []
+    # Matriz de custos para cada participante e sala
+    cost_matrix = []
 
-# Extrai os tipos de teste e as informações das salas disponíveis em cada distrito.
-def get_tests_and_rooms(districts):
-    types = []
-    rooms = []
+    # Criar o mapeamento de salas com informações de capacidade, tipo de prova e distrito
+    for school in schools:
+        for room in school["rooms"]:
+            school_room_map.append({
+                "school_id": school["id"],       # ID da escola
+                "room_id": room["id"],           # ID da sala
+                "capacity": room["capacity"],    # Capacidade da sala
+                "type_of_test": room["type_of_test"],  # Tipo de prova compatível com a sala
+                "district_id": school["district_id"]  # Distrito onde a escola está localizada
+            })
 
-    for district in districts:
-        for school in district["schools"]:
-            for room in school["rooms"]:
-                # Adiciona os dados da sala à lista de salas
-                rooms.append({
-                    "district_id": district["id"],
-                    "school_id": school["id"],
-                    "room_id": room["id"],
-                    "type_of_test": room["type_of_test"],
-                    "capacity": room["capacity"]
-                })
+    # Preencher matriz de custos para cada participante
+    for participant in participants:
+        participant_cost = []  # Custos para este participante
+        for room in school_room_map:
+            if participant["type_of_test"] == room["type_of_test"]:  # Verificar compatibilidade do tipo de prova
+                try:
+                    # Obter a distância do distrito do participante para o distrito da sala
+                    dist = distances.loc[participant["district_id"], room["district_id"]]
+                    participant_cost.append(float(dist))  # Adicionar custo baseado na distância
+                except KeyError:
+                    # Caso o distrito não exista na matriz, custo infinito
+                    participant_cost.append(np.inf)
+            else:
+                # Custo infinito se o tipo de prova não for compatível
+                participant_cost.append(np.inf)
+        cost_matrix.append(participant_cost)  # Adicionar custos do participante à matriz
+    return np.array(cost_matrix), school_room_map  # Retornar matriz de custos e mapeamento de salas
 
-                # Garante que o tipo de teste seja único na lista
-                if room["type_of_test"] not in types:
-                    types.append(room["type_of_test"])
+# Função para alocar participantes às salas com fallback
+def allocate_participants_with_fallback(participants, schools, distances):
+    # Obter matriz de custos e mapeamento de salas
+    cost_matrix, school_room_map = prepare_cost_matrix(participants, schools, distances)
+    room_usage = [0] * len(school_room_map)  # Lista para rastrear o uso atual de cada sala
+    assignments = []  # Lista final de alocações
 
-    return types, rooms
+    # Iterar sobre cada participante para encontrar a melhor sala
+    for participant_idx, participant in enumerate(participants):
+        best_room_idx = None  # Índice da melhor sala
+        best_cost = np.inf    # Melhor custo (menor distância)
 
+        # Iterar sobre as salas para encontrar a melhor alocação
+        for room_idx, cost in enumerate(cost_matrix[participant_idx]):
+            if cost < best_cost and room_usage[room_idx] < school_room_map[room_idx]["capacity"]:
+                # Atualizar melhor sala se o custo for menor e a sala tiver capacidade disponível
+                best_cost = cost
+                best_room_idx = room_idx
 
-# Retorna o número de escolas em um distrito.
-def district_with_schools(district):
-    return len(district["schools"])
+        if best_room_idx is not None and best_cost < 9999:
+            # Se foi encontrada uma sala válida
+            room_details = school_room_map[best_room_idx]  # Detalhes da sala selecionada
+            assignments.append({
+                "participant_id": participant["id"],      # ID do participante
+                "district_id": participant["district_id"],  # Distrito do participante
+                "school_id": room_details["school_id"],    # ID da escola
+                "room_id": room_details["room_id"],        # ID da sala
+                "type_of_test": participant["type_of_test"],  # Tipo de prova
+                "distance": best_cost  # Distância para a sala
+            })
+            room_usage[best_room_idx] += 1  # Atualizar uso da sala
+        else:
+            # Se nenhuma sala foi encontrada, adicionar fallback
+            assignments.append({
+                "participant_id": participant["id"],      # ID do participante
+                "district_id": participant["district_id"],  # Distrito do participante
+                "school_id": -2,                           # ID especial para fallback
+                "room_id": -2,                             # Sala especial para fallback
+                "type_of_test": participant["type_of_test"],  # Tipo de prova
+                "distance": 9999  # Distância indicando fallback
+            })
+    return assignments  # Retornar lista de alocações
 
+# Carregar dados
+distance_matrix = pd.read_csv("distance_matrix.csv", index_col=0)  # Carregar matriz de distâncias
+with open("participants.json", "r") as f:
+    participants = json.load(f)  # Carregar lista de participantes
+with open("schools.json", "r") as f:
+    schools = json.load(f)  # Carregar lista de escolas
 
-# Identifica os distritos que possuem escolas oferecendo um determinado tipo de teste.
-def get_districts_with_test(rooms, type_of_test):
-    return list({room["district_id"] for room in rooms if room["type_of_test"] == type_of_test})
+# Ajustar índices da matriz de distâncias para números
+district_mapping = {name: idx for idx, name in enumerate(distance_matrix.index)}  # Mapear distritos para índices numéricos
+distance_matrix = distance_matrix.rename(index=district_mapping, columns=district_mapping)  # Renomear índices e colunas
 
+# Remover duplicatas nos índices da matriz de distâncias
+distance_matrix = distance_matrix.loc[~distance_matrix.index.duplicated(keep='first')]
+distance_matrix = distance_matrix.loc[:, ~distance_matrix.columns.duplicated(keep='first')]
 
-# Calcula a menor distância entre distritos e distritos com escolas que oferecem um determinado tipo de teste.
-def calculate_minimum_distance_by_index(distance_matrix, school_district_indices):
-    minimum_distances = {}
-    for i, district in enumerate(distance_matrix.index):
-        # Seleciona as distâncias do distrito atual para os distritos-alvo
-        distances_to_schools = distance_matrix.iloc[i, school_district_indices]
-        # Calcula a distância mínima
-        minimum_distances[i] = int(distances_to_schools.min())
-    return minimum_distances
+# Adicionar distritos ausentes na matriz de distâncias, se necessário
+missing_districts = set(participant["district_id"] for participant in participants) - set(distance_matrix.index)
+for missing in missing_districts:
+    # Adicionar valores padrão para distritos ausentes
+    distance_matrix.loc[missing] = 9999999
+    distance_matrix[missing] = 9999999
+    distance_matrix.loc[missing, missing] = 0
 
+# Alocar participantes às salas
+assignments = allocate_participants_with_fallback(participants, schools, distance_matrix)
 
-# Ordena os distritos com base na distância mínima para os distritos com escolas.
-def order_by_distance(distance_matrix, districts_with_schools):
-    # Calcula as distâncias mínimas
-    minimum_distances = calculate_minimum_distance_by_index(distance_matrix, districts_with_schools)
+# Verificar se todos os participantes foram alocados
+total_participants = len(participants)  # Número total de participantes
 
-    # Ordena os distritos pela distância mínima (decrescente)
-    sorted_districts = sorted(minimum_distances.items(), key=lambda x: x[1], reverse=True)
+# Salvar somente os participantes alocados em salas reais
+with open("allocation_result.json", "w") as f:
+    json.dump([a for a in assignments if a["school_id"] != -2], f, indent=4)  # Salvar alocações reais no arquivo
 
-    return [i for i, item in sorted_districts]
-
-
-# Função principal para realizar a alocação de participantes.
-def main():
-    # Carrega a matriz de distâncias e os dados de entrada
-    distance_matrix = pd.read_csv("distance_matrix.csv", index_col=0)
-    districts = json.load(open("districts_schools.json", "r", encoding="utf-8"))
-    participants = json.load(open("participants.json", "r", encoding="utf-8"))
-
-    # Processa os tipos de teste e as salas disponíveis
-    types_tests, rooms = get_tests_and_rooms(districts)
-
-    # Converte a matriz de distâncias para uma lista
-    distance_matrix_items = distance_matrix.to_numpy().tolist()
-
-    result = []  # Lista para armazenar os resultados da alocação
-
-    # Itera sobre cada tipo de teste
-    for type_of_test in types_tests:
-        # Identifica os distritos com salas disponíveis para o tipo de teste
-        districts_with_test = get_districts_with_test(rooms, type_of_test)
-        # Ordena os distritos pela distância mínima para as escolas
-        district_distance_order = order_by_distance(distance_matrix, districts_with_test)
-        # Filtra as salas para o tipo de teste atual
-        rooms_with_test = [room for room in rooms if room["type_of_test"] == type_of_test]
-
-        # Itera sobre os distritos ordenados
-        for district in district_distance_order:
-            # Filtra os participantes do distrito atual
-            district_participants = [
-                item for item in participants
-                if item["district_id"] == district and item["type_of_test"] == type_of_test
-            ]
-
-            # Ordena os distritos-alvo com base na distância
-            distance_matrix_to_test = sorted([
-                (index, item)
-                for index, item in enumerate(distance_matrix_items[district])
-                if index in districts_with_test
-            ], key=lambda x: x[1])
-
-            # Aloca os participantes em salas disponíveis
-            for participant in district_participants:
-                for test_district_index, distance in distance_matrix_to_test:
-                    # Busca uma sala disponível no distrito mais próximo
-                    available_room = next(
-                        (room for room in rooms_with_test if
-                         room["district_id"] == test_district_index and room["capacity"] > 0),
-                        None
-                    )
-
-                    if available_room:
-                        # Realiza a alocação do participante
-                        result.append({
-                            "participant_id": participant["id"],
-                            "district_id": test_district_index,
-                            "school_id": available_room["school_id"],
-                            "room_id": available_room["room_id"],
-                            "type_of_test": type_of_test,
-                            "distance": distance
-                        })
-                        # Reduz a capacidade da sala
-                        available_room["capacity"] -= 1
-                        break
-
-        # Exibe e salva o resultado final da alocação
-        print(json.dumps(result, indent=4))
-        with open("allocation_result.json", "w") as output_file:
-            json.dump(result, output_file, indent=4)
-
-
-# Executa a função principal
-main()
+print("Alocações salvas em 'allocation_result.json'.")
